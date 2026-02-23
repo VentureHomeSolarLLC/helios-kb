@@ -1,42 +1,74 @@
-# Helios Knowledge Base
+# Helios Customer Support Knowledge Base
 
-This repository contains the source content for the Venture Home Helios Knowledge Base, which will be available publicly at `help.venturehome.com` and internally through Forge.
+Customer-facing knowledge base for Venture Home Solar, structured for AI-powered chat and search.
 
-## Content Organization
+## Overview
 
-To ensure a clear separation between public and private information, all content is organized into two top-level directories:
+This repository contains structured content for the Helios customer support system, including:
+- 30 help articles across 6 categories
+- Question aliases for semantic matching
+- Content chunks optimized for RAG retrieval
+- Cross-linking between related articles
 
-### `/public`
+## Structure
 
-All articles and assets in this directory are considered public and will be published to the customer-facing website. **Do not place any sensitive or internal-only information here.**
+```
+content/
+└── articles.json          # All KB articles in structured format
 
-### `/internal`
+scripts/
+└── (import/export utilities)
 
-This directory is for documentation intended for Venture Home employees only. The content here will be accessible via a secure, authenticated session in Forge and **will not** be published on the public website.
+.github/workflows/
+└── validate.yml           # Content validation on PR
+```
+
+## Categories
+
+1. **Finance Providers** (12 articles) — Sungage, Mosaic, Dividend, Service Finance, Credit Human, Flic, Participate, SunStrong, Palmetto LightReach, IGS, Enfin
+2. **System Monitoring** (4 articles) — Enphase, SolarEdge, Tesla, SunPower
+3. **Troubleshooting** (2 articles) — System errors, low production
+4. **Customer Journey** (3 articles) — Pre-install, installation day, PTO
+5. **Billing & Production** (4 articles) — Net metering, utility bills, RECs
+6. **Warranty & Service** (5 articles) — Coverage, damage, repairs, contact
 
 ## Article Format
 
-All articles are to be written in Markdown (`.md`). Each article must begin with a YAML frontmatter block for metadata.
+Each article includes:
+- `id`, `slug`, `title`, `category_id`
+- `tags[]` — searchable keywords
+- `visibility` — customer/internal/both
+- `question_aliases[]` — alternate phrasings for AI matching
+- `content_chunks[]` — 500-1000 token segments
+- `related_article_ids[]` — cross-reference links
 
-**Example:**
-```yaml
----
-title: "Troubleshooting the Tesla Powerwall 3"
-product: "Tesla Powerwall 3"
-category: "Troubleshooting"
-tags: ["inverter", "powerwall", "error codes"]
-last_updated: "2026-02-18"
----
+## Usage
 
-## Issue: The Powerwall is not charging
+### Load into Database
 
-First, check the...
+```bash
+node scripts/import-to-forge.js
 ```
 
-## Contribution Workflow
+### Generate Embeddings
 
-1.  Create a new branch for your changes.
-2.  Add your new or updated articles to the appropriate directory (`/public` or `/internal`).
-3.  Submit a pull request for review.
+```bash
+node scripts/generate-embeddings.js
+```
 
-For team members without GitHub access (like Taylor), please email your Markdown files to Rex, who will commit them on your behalf.
+### Validate Content
+
+```bash
+npm run validate
+```
+
+## Contributing
+
+1. Edit `content/articles.json`
+2. Run validation: `npm run validate`
+3. Submit PR with description of changes
+4. GitHub Actions will validate JSON structure
+
+## License
+
+© 2026 Venture Home Solar, LLC. Internal use only.
